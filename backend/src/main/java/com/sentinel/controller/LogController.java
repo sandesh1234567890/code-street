@@ -1,3 +1,4 @@
+// log ingestion controller
 package com.sentinel.controller;
 
 import com.sentinel.dto.TimeSeriesDTO;
