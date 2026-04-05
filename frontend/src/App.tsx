@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import LogViewer from './pages/LogViewer';
 import Issues from './pages/Issues';
+import Login from './pages/Login';
+import { AuthProvider, useAuth } from './context/AuthContext';
 
-function App() {
+function AppContent() {
   const [currentPage, setCurrentPage] = useState('dashboard');
+  const { isAuthenticated, logout, user } = useAuth();
+
+  if (!isAuthenticated) {
+    return <Login />;
+  }
 
   const renderPage = () => {
     switch (currentPage) {
@@ -17,13 +24,26 @@ function App() {
   };
 
   return (
-    <div className="flex bg-background min-h-screen text-foreground selection:bg-primary/20">
-      <Sidebar onNavigate={setCurrentPage} currentPage={currentPage} />
+    <div className="flex bg-[#020617] min-h-screen text-slate-200 selection:bg-blue-500/30">
+      <Sidebar 
+        onNavigate={setCurrentPage} 
+        currentPage={currentPage} 
+        onLogout={logout}
+        user={user}
+      />
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
         {renderPage()}
       </main>
     </div>
-  )
+  );
 }
 
-export default App
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+}
+
+export default App;

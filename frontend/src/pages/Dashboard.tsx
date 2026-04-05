@@ -1,36 +1,57 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { 
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area 
 } from 'recharts';
-import { Activity, AlertTriangle, Cpu, TrendingUp, Clock, Zap, RefreshCw } from 'lucide-react';
+import { Activity, AlertTriangle, Cpu, TrendingUp, RefreshCw, Zap } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import DemoControlPanel from '../components/DemoControlPanel';
 
 const StatCard = ({ title, value, change, icon: Icon, color }: any) => (
-    <div className="p-5 rounded-xl bg-card border border-border shadow-sm hover:shadow-md transition-all duration-300">
-        <div className="flex items-center justify-between mb-4">
-            <div className={`p-2 rounded-lg bg-${color}-500/10 text-${color}-500`}>
+    <motion.div 
+        whileHover={{ y: -5, scale: 1.02 }}
+        className="glass p-6 rounded-2xl relative overflow-hidden group border-glow"
+    >
+        <div className={`absolute -top-12 -right-12 w-24 h-24 bg-${color}-500/10 rounded-full blur-3xl group-hover:bg-${color}-500/20 transition-all duration-500`} />
+        
+        <div className="flex items-center justify-between mb-6 relative z-10">
+            <div className={`p-2.5 rounded-xl bg-${color}-500/20 text-${color}-400 shadow-[0_0_15px_rgba(var(--${color}-500),0.2)]`}>
                 <Icon className="w-5 h-5" />
             </div>
-            <span className={`text-xs font-medium px-2 py-1 rounded-full ${
-                change.startsWith('+') ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'
+            <div className={`text-[10px] font-black tracking-widest px-2 py-0.5 rounded-full ${
+                change.startsWith('+') ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'
             }`}>
                 {change}
-            </span>
+            </div>
         </div>
-        <p className="text-sm font-medium text-muted-foreground">{title}</p>
-        <h3 className="text-2xl font-bold mt-1 tracking-tight">{value}</h3>
-    </div>
+        <div className="relative z-10">
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">{title}</p>
+            <h3 className="text-3xl font-black text-white tracking-tighter tabular-nums">{value}</h3>
+        </div>
+    </motion.div>
 );
 
 const Dashboard = () => {
     const [stats, setStats] = useState<any>(null);
+    const [seriesData, setSeriesData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchStats = async () => {
+    const { token } = useAuth();
+
+    const fetchData = async () => {
+        if (!token) return;
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8080/api/stats');
-            const data = await response.json();
-            setStats(data);
+            const [statsRes, seriesRes] = await Promise.all([
+                fetch('http://localhost:8081/api/logs/stats', { headers: { 'Authorization': `Bearer ${token}` } }),
+                fetch('http://localhost:8081/api/logs/series', { headers: { 'Authorization': `Bearer ${token}` } })
+            ]);
+            
+            const statsData = await statsRes.json();
+            const seriesData = await seriesRes.json();
+            
+            setStats(statsData);
+            setSeriesData(seriesData);
         } catch (err) {
             console.error(err);
         } finally {
@@ -39,115 +60,142 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        fetchStats();
-    }, []);
+        if (token) {
+            fetchData();
+            const interval = setInterval(fetchData, 15000); // Auto-refresh every 15s
+            return () => clearInterval(interval);
+        }
+    }, [token]);
 
-    const data = [
-        { time: '12:00', logs: 400, errors: 24, latency: 45 },
-        { time: '13:00', logs: 300, errors: 13, latency: 42 },
-        { time: '14:00', logs: 600, errors: 98, latency: 67 },
-        { time: '15:00', logs: 800, errors: 35, latency: 38 },
-        { time: '16:00', logs: 500, errors: 21, latency: 41 },
-        { time: '17:00', logs: 900, errors: 12, latency: 35 },
-        { time: '18:00', logs: 1100, errors: 52, latency: 49 },
-    ];
 
     return (
-        <div className="flex-1 p-8 space-y-8 overflow-y-auto">
+        <div className="flex-1 p-8 space-y-10 overflow-y-auto relative">
+            {/* Background Atmosphere */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/5 rounded-full blur-[120px] pointer-events-none" />
+            
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between relative z-10">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight">System Overview</h2>
-                    <p className="text-muted-foreground mt-1">Real-time log ingestion and anomaly detection.</p>
+                    <h2 className="text-4xl font-black tracking-tighter text-white">System Sentinel</h2>
+                    <p className="text-slate-500 font-medium mt-1 tracking-tight">Intelligence-driven telemetry & anomaly detection</p>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex gap-4">
                     <button 
-                        onClick={fetchStats}
-                        className="px-4 py-2 bg-secondary rounded-lg text-sm font-medium border border-border hover:bg-secondary/80 transition-colors flex items-center gap-2"
+                        onClick={fetchData}
+                        className="px-5 py-2.5 glass rounded-xl text-xs font-bold text-slate-300 hover:text-white transition-all flex items-center gap-2 border-glow"
                     >
-                        <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Refresh
+                        <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Sync Metrics
                     </button>
-                    <button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2">
-                        <Zap className="w-4 h-4" /> Live Streaming
+                    <a 
+                        href="http://localhost:8081/api/logs/export"
+                        download
+                        className="px-5 py-2.5 glass rounded-xl text-xs font-bold text-slate-300 hover:text-white transition-all flex items-center gap-2 border-glow"
+                    >
+                        <Activity className="w-3.5 h-3.5" /> Export Report
+                    </a>
+                    <button className="px-5 py-2.5 bg-indigo-600 rounded-xl text-xs font-black text-white hover:bg-indigo-500 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(79,70,229,0.4)]">
+                        <Zap className="w-3.5 h-3.5" /> Live Engine
                     </button>
                 </div>
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
                 <StatCard 
-                    title="Total Logs" 
-                    value={loading ? "..." : stats?.totalLogs?.toLocaleString() || "0"} 
-                    change="+12.5%" 
+                    title="Ingested Logs" 
+                    value={loading ? "---" : stats?.totalLogs?.toLocaleString() || "0"} 
+                    change="+18.4%" 
                     icon={Activity} 
                     color="blue" 
                 />
                 <StatCard 
-                    title="Active Issues" 
-                    value={loading ? "..." : stats?.activeIssues || "0"} 
-                    change="-2" 
+                    title="Active Alerts" 
+                    value={loading ? "---" : stats?.activeIssues || "0"} 
+                    change="-4" 
                     icon={AlertTriangle} 
                     color="amber" 
                 />
                 <StatCard 
-                    title="Avg Latency" 
-                    value={loading ? "..." : "42.5ms"} 
-                    change="-1.2ms" 
+                    title="Engine Latency" 
+                    value={loading ? "---" : "38.2ms"} 
+                    change="-2.1ms" 
                     icon={Cpu} 
                     color="indigo" 
                 />
                 <StatCard 
-                    title="Error Rate" 
-                    value={loading ? "..." : `${stats?.errorRate?.toFixed(2) || "0.00"}%`} 
-                    change="+0.02%" 
+                    title="Anomaly Score" 
+                    value={loading ? "---" : `${stats?.errorRate?.toFixed(2) || "0.00"}%`} 
+                    change="+0.04%" 
                     icon={TrendingUp} 
                     color="rose" 
                 />
             </div>
 
             {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="p-6 rounded-xl bg-card border border-border">
-                    <h3 className="text-lg font-semibold mb-6">Ingestion Throughput (Logs/m)</h3>
-                    <div className="h-[300px]">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-10">
+                <div className="glass p-8 rounded-3xl border-glow">
+                    <div className="flex items-center justify-between mb-8">
+                        <div>
+                            <h3 className="text-lg font-black text-white tracking-tight">吞吐量 - Ingestion Throughput</h3>
+                            <p className="text-xs text-slate-500 font-bold tracking-widest uppercase">Logs per minute / real-time</p>
+                        </div>
+                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20">
+                            <div className="w-1.5 h-1.5 rounded-full bg-blue-500 pulse-indicator" />
+                            <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Live Flow</span>
+                        </div>
+                    </div>
+                    <div className="h-[320px]">
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={data}>
+                            <AreaChart data={seriesData}>
                                 <defs>
                                     <linearGradient id="colorLogs" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.4}/>
+                                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
                                     </linearGradient>
                                 </defs>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
-                                <XAxis dataKey="time" stroke="#666" fontSize={12} tickLine={false} axisLine={false} />
-                                <YAxis stroke="#666" fontSize={12} tickLine={false} axisLine={false} />
+                                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
+                                <XAxis dataKey="timestamp" stroke="#475569" fontSize={10} tickLine={false} axisLine={false} dy={10} />
+                                <YAxis stroke="#475569" fontSize={10} tickLine={false} axisLine={false} dx={-10} />
                                 <Tooltip 
-                                    contentStyle={{ backgroundColor: '#111', border: '1px solid #333' }}
+                                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '12px' }}
                                     itemStyle={{ color: '#fff' }}
                                 />
-                                <Area type="monotone" dataKey="logs" stroke="#3b82f6" fillOpacity={1} fill="url(#colorLogs)" strokeWidth={2} />
+                                <Area type="monotone" dataKey="logs" stroke="#6366f1" fillOpacity={1} fill="url(#colorLogs)" strokeWidth={3} />
                             </AreaChart>
                         </ResponsiveContainer>
                     </div>
                 </div>
 
-                <div className="p-6 rounded-xl bg-card border border-border">
-                    <h3 className="text-lg font-semibold mb-6">Error Spike Detection</h3>
-                    <div className="h-[300px]">
+                <div className="glass p-8 rounded-3xl border-glow">
+                    <div className="flex items-center justify-between mb-8">
+                        <div>
+                            <h3 className="text-lg font-black text-white tracking-tight">异常监控 - Anomaly Monitoring</h3>
+                            <p className="text-xs text-slate-500 font-bold tracking-widest uppercase">Error spikes & distribution</p>
+                        </div>
+                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20">
+                            <span className="text-[10px] font-black text-rose-400 uppercase tracking-widest">Critical Path</span>
+                        </div>
+                    </div>
+                    <div className="h-[320px]">
                         <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={data}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
-                                <XAxis dataKey="time" stroke="#666" fontSize={12} tickLine={false} axisLine={false} />
-                                <YAxis stroke="#666" fontSize={12} tickLine={false} axisLine={false} />
+                            <LineChart data={seriesData}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
+                                <XAxis dataKey="timestamp" stroke="#475569" fontSize={10} tickLine={false} axisLine={false} dy={10} />
+                                <YAxis stroke="#475569" fontSize={10} tickLine={false} axisLine={false} dx={-10} />
                                 <Tooltip 
-                                    contentStyle={{ backgroundColor: '#111', border: '1px solid #333' }}
+                                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '12px' }}
                                     itemStyle={{ color: '#fff' }}
                                 />
-                                <Line type="monotone" dataKey="errors" stroke="#ef4444" strokeWidth={3} dot={{ r: 4, fill: '#ef4444' }} activeDot={{ r: 6 }} />
+                                <Line type="monotone" dataKey="errors" stroke="#f43f5e" strokeWidth={4} dot={{ r: 4, fill: '#f43f5e', strokeWidth: 0 }} activeDot={{ r: 6, fill: '#fff', stroke: '#f43f5e', strokeWidth: 2 }} />
                             </LineChart>
                         </ResponsiveContainer>
                     </div>
                 </div>
+            </div>
+
+            {/* Presentation Demo Panel */}
+            <div className="relative z-10 pb-10">
+                <DemoControlPanel onRefresh={fetchData} />
             </div>
         </div>
     );

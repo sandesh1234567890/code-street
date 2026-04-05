@@ -34,10 +34,14 @@ public class Log {
     public void setId(UUID id) { this.id = id; }
     public Project getProject() { return project; }
     public void setProject(Project project) { this.project = project; }
+    public SubModule getSubModule() { return subModule; }
+    public void setSubModule(SubModule subModule) { this.subModule = subModule; }
     public Issue getIssue() { return issue; }
     public void setIssue(Issue issue) { this.issue = issue; }
     public String getLevel() { return level; }
     public void setLevel(String level) { this.level = level; }
+    public String getEnvironment() { return environment; }
+    public void setEnvironment(String environment) { this.environment = environment; }
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
     public String getStackTrace() { return stackTrace; }

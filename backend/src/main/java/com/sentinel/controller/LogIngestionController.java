@@ -1,72 +1,55 @@
 package com.sentinel.controller;
 
-import com.sentinel.dto.LogDTO;
-import com.sentinel.model.*;
+import com.sentinel.dto.BatchLogRequest;
+import com.sentinel.dto.LokiPushRequest;
+import com.sentinel.model.Log;
 import com.sentinel.service.LogService;
-import com.sentinel.service.GeminiService;
-import com.sentinel.repository.IssueRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/ingest")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class LogIngestionController {
 
     private final LogService logService;
-    private final GeminiService geminiService;
-    private final IssueRepository issueRepository;
 
-    // Explicit Constructor for Build Reliability
-    public LogIngestionController(LogService logService, GeminiService geminiService, IssueRepository issueRepository) {
+    public LogIngestionController(LogService logService) {
         this.logService = logService;
-        this.geminiService = geminiService;
-        this.issueRepository = issueRepository;
     }
 
-    @PostMapping("/logs")
-    public ResponseEntity<String> ingestLog(
-            @RequestHeader("X-API-KEY") String apiKey,
-            @RequestBody LogDTO logDto) {
+    @PostMapping("/log")
+    public ResponseEntity<Log> ingestLog(
+            @RequestBody Map<String, Object> logData,
+            @RequestHeader("X-API-KEY") String apiKey) {
         
-        // ASYNC LOG INGESTION
-        logService.ingestLog(apiKey, logDto);
+        // LogService.ingestLog(apiKey, logData)
+        Log logEntity = logService.ingestLog(apiKey, logData);
+        return ResponseEntity.ok(logEntity);
+    }
+
+    @PostMapping("/batch")
+    public ResponseEntity<String> ingestBatch(
+            @RequestBody BatchLogRequest request,
+            @RequestHeader("X-API-KEY") String apiKey) {
         
-        // IMMEDIATE SUCCESS FOR HIGH THROUGHPUT
-        return ResponseEntity.accepted().body("Received");
+        // LogService.ingestBatch(apiKey, request)
+        logService.ingestBatch(apiKey, request);
+        return ResponseEntity.ok("Batch ingested successfully");
     }
 
-    @GetMapping("/logs")
-    public ResponseEntity<List<Log>> getLogs(
-            @RequestParam(required = false) String level,
-            @RequestParam(required = false) String search) {
-        return ResponseEntity.ok(logService.getFilteredLogs(level, search));
-    }
-
-    @GetMapping("/stats")
-    public ResponseEntity<Map<String, Object>> getStats() {
-        return ResponseEntity.ok(logService.getStats());
-    }
-
-    @GetMapping("/issues")
-    public ResponseEntity<List<Issue>> getIssues() {
-        return ResponseEntity.ok(logService.getAllIssues());
-    }
-
-    @PostMapping("/issues/{id}/resolve")
-    public ResponseEntity<Void> resolveIssue(@PathVariable UUID id) {
-        logService.resolveIssue(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/issues/{id}/analyze")
-    public ResponseEntity<Map<String, String>> analyzeIssue(@PathVariable UUID id) {
-        Issue issue = issueRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Issue not found"));
+    // Loki/Promtail compatible endpoint
+    @PostMapping("/loki/api/v1/push")
+    public ResponseEntity<String> lokiIngest(
+            @RequestBody LokiPushRequest request,
+            @RequestHeader(value = "X-API-KEY", required = false) String apiKey) {
         
-        String analysis = geminiService.analyzeIssue(issue);
-        Map<String, String> result = new HashMap<>();
-        result.put("analysis", analysis);
-        return ResponseEntity.ok(result);
+        // Use a default key if not provided for Promtail convenience in demo
+        String finalApiKey = (apiKey != null) ? apiKey : "sentinel-demo-key-2026";
+        
+        // LogService.ingestLoki(apiKey, request)
+        logService.ingestLoki(finalApiKey, request);
+        return ResponseEntity.noContent().build();
     }
 }

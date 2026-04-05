@@ -15,7 +15,7 @@ public class GeminiService {
 
     private final WebClient.Builder webClientBuilder;
     
-    @Value("${gemini.api.key}")
+    @Value("${gemini.api.key:demo-api-key}")
     private String apiKey;
 
     public GeminiService(WebClient.Builder webClientBuilder) {
@@ -24,7 +24,12 @@ public class GeminiService {
 
     public String analyzeIssue(Issue issue) {
         String prompt = String.format(
-            "Analyze this software error and provide a concise root cause and a proposed fix.\n" +
+            "Analyze this software error and provide a comprehensive diagnostic report in the following format:\n" +
+            "1. REPORT: Summary of the error and its impact.\n" +
+            "2. PROCESS: Explanation of what caused this issue (Root Cause).\n" +
+            "3. SOLVE: A detailed step-by-step fix or code snippet.\n" +
+            "\n" +
+            "Error Details:\n" +
             "Title: %s\n" +
             "Level: %s\n" +
             "Project: %s\n" +

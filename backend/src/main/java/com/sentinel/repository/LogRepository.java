@@ -11,6 +11,7 @@ import java.util.UUID;
 public interface LogRepository extends JpaRepository<Log, UUID> {
     long countByLevel(String level);
     
+    // Standard JPA Filter (Compatible across H2 and PostgreSQL for demo reliability)
     @Query("SELECT l FROM Log l WHERE " +
            "l.project.id = :projectId AND " +
            "(:subModuleIds IS NULL OR l.subModule.id IN :subModuleIds) AND " +
@@ -18,4 +19,13 @@ public interface LogRepository extends JpaRepository<Log, UUID> {
            "(:search IS NULL OR LOWER(l.message) LIKE LOWER(CONCAT('%', :search, '%'))) " +
            "ORDER BY l.timestamp DESC")
     List<Log> filterLogs(UUID projectId, List<UUID> subModuleIds, String level, String search);
+
+    // nativeQuery = true with standard SQL syntax for cross-DB compatibility
+    @Query(value = "SELECT timestamp as hr, " +
+                   "COUNT(*) as total, " +
+                   "SUM(CASE WHEN level IN ('ERROR', 'FATAL') THEN 1 ELSE 0 END) as errs " +
+                   "FROM logs WHERE project_id = :projectId " +
+                   "AND timestamp > :since " +
+                   "GROUP BY hr ORDER BY hr ASC", nativeQuery = true)
+    List<Object[]> getLogSeries(UUID projectId, java.time.OffsetDateTime since);
 }

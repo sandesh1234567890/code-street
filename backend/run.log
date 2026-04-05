@@ -1,0 +1,318 @@
+﻿mvn.cmd : WARNING: A restricted method in 
+java.lang.System has been called
+At line:1 char:142
++ ... Sleep -s 1; & "$env:USERPROFILE\.m2\wra
+pper\apache-maven-3.9.6\bin\mv ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified:  
+   (WARNING: A rest...has been called:Strin  
+  g) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandE 
+   rror
+ 
+WARNING: java.lang.System::load has been 
+called by 
+org.fusesource.jansi.internal.JansiLoader in 
+an unnamed module (file:/C:/Users/sande/.m2/w
+rapper/apache-maven-3.9.6/lib/jansi-2.4.0.jar
+)
+WARNING: Use 
+--enable-native-access=ALL-UNNAMED to avoid 
+a warning for callers in this module
+WARNING: Restricted methods will be blocked 
+in a future release unless native access is 
+enabled
+
+WARNING: A terminally deprecated method in 
+sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset 
+has been called by com.google.common.util.con
+current.AbstractFuture$UnsafeAtomicHelper (fi
+le:/C:/Users/sande/.m2/wrapper/apache-maven-3
+.9.6/lib/guava-32.0.1-jre.jar)
+WARNING: Please consider reporting this to 
+the maintainers of class com.google.common.ut
+il.concurrent.AbstractFuture$UnsafeAtomicHelp
+er
+WARNING: sun.misc.Unsafe::objectFieldOffset 
+will be removed in a future release
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.sentinel:backend >------------------------
+[INFO] Building Sentinel Backend 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ backend ---
+[INFO] Deleting D:\react\sentinel-analytics\backend\target
+[INFO] 
+[INFO] >>> spring-boot:3.2.4:run (default-cli) > test-compile @ backend >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ backend ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ backend ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 32 source files with javac [debug release 17] to target\classes
+[INFO] /D:/react/sentinel-analytics/backend/src/main/java/com/sentinel/model/Project.java: Some input files use or override a deprecated API.
+[INFO] /D:/react/sentinel-analytics/backend/src/main/java/com/sentinel/model/Project.java: Recompile with -Xlint:deprecation for details.
+[INFO] /D:/react/sentinel-analytics/backend/src/main/java/com/sentinel/service/GeminiService.java: D:\react\sentinel-analytics\backend\src\main\java\com\sentinel\service\GeminiService.java uses unchecked or unsafe operations.
+[INFO] /D:/react/sentinel-analytics/backend/src/main/java/com/sentinel/service/GeminiService.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ backend ---
+[INFO] skip non existing resourceDirectory D:\react\sentinel-analytics\backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ backend ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] <<< spring-boot:3.2.4:run (default-cli) < test-compile @ backend <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.2.4:run (default-cli) @ backend ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.4)
+
+2026-04-05T09:58:25.818+05:30  INFO 3516 --- [           main] com.sentinel.SentinelApplication         : Starting SentinelApplication using Java 25 with PID 3516 (D:\react\sentinel-analytics\backend\target\classes started by sande in D:\react\sentinel-analytics\backend)
+2026-04-05T09:58:25.822+05:30  INFO 3516 --- [           main] com.sentinel.SentinelApplication         : No active profile set, falling back to 1 default profile: "default"
+2026-04-05T09:58:26.845+05:30  INFO 3516 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-05T09:58:27.106+05:30  INFO 3516 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 243 ms. Found 6 JPA repository interfaces.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.apache.tomcat.jni.Library in an unnamed module (file:/C:/Users/sande/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.19/tomcat-embed-core-10.1.19.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+2026-04-05T09:58:28.958+05:30  INFO 3516 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-04-05T09:58:29.029+05:30  INFO 3516 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-04-05T09:58:29.029+05:30  INFO 3516 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2026-04-05T09:58:29.284+05:30  INFO 3516 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-04-05T09:58:29.287+05:30  INFO 3516 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3378 ms
+2026-04-05T09:58:29.445+05:30  INFO 3516 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-04-05T09:58:29.948+05:30  INFO 3516 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:sentinel user=SA
+2026-04-05T09:58:29.953+05:30  INFO 3516 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-04-05T09:58:29.981+05:30  INFO 3516 --- [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:sentinel'
+2026-04-05T09:58:30.284+05:30  INFO 3516 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-04-05T09:58:30.391+05:30  INFO 3516 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-04-05T09:58:30.473+05:30  INFO 3516 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-04-05T09:58:31.242+05:30  INFO 3516 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-05T09:58:31.400+05:30  WARN 3516 --- [           main] org.hibernate.dialect.Dialect            : HHH000511: The 2.2.0 version for [org.hibernate.dialect.PostgreSQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 12.0.0. Check the community dialects project for available legacy versions.
+2026-04-05T09:58:31.411+05:30  WARN 3516 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-05T09:58:33.817+05:30  INFO 3516 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: 
+    create table issues (
+        id uuid not null,
+        fingerprint varchar(255),
+        first_seen timestamp(6) with time zone,
+        last_seen timestamp(6) with time zone,
+        level varchar(255),
+        occurrence_count bigint,
+        status varchar(255),
+        title varchar(255),
+        project_id uuid,
+        primary key (id)
+    )
+Hibernate: 
+    create table logs (
+        id uuid not null,
+        duration_ms integer,
+        environment varchar(255),
+        level varchar(255),
+        message TEXT,
+        stack_trace TEXT,
+        timestamp timestamp(6) with time zone,
+        issue_id uuid,
+        project_id uuid,
+        sub_module_id uuid,
+        primary key (id)
+    )
+Hibernate: 
+    create table projects (
+        id uuid not null,
+        api_key varchar(255) not null,
+        created_at timestamp(6) with time zone,
+        name varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table sub_modules (
+        id uuid not null,
+        created_at timestamp(6) with time zone,
+        name varchar(255) not null,
+        project_id uuid,
+        primary key (id)
+    )
+Hibernate: 
+    create table teams (
+        id uuid not null,
+        created_at timestamp(6) with time zone,
+        name varchar(255) not null,
+        project_id uuid,
+        primary key (id)
+    )
+Hibernate: 
+    create table teams_submodules (
+        team_id uuid not null,
+        sub_module_id uuid not null,
+        primary key (team_id, sub_module_id)
+    )
+Hibernate: 
+    create table users (
+        id uuid not null,
+        created_at timestamp(6) with time zone,
+        email varchar(255) not null,
+        password_hash varchar(255) not null,
+        role varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table users_teams (
+        user_id uuid not null,
+        team_id uuid not null,
+        primary key (user_id, team_id)
+    )
+Hibernate: 
+    alter table if exists projects 
+       drop constraint if exists UK_l99f162dpbaawwsont5i4qn15
+Hibernate: 
+    alter table if exists projects 
+       add constraint UK_l99f162dpbaawwsont5i4qn15 unique (api_key)
+Hibernate: 
+    alter table if exists users 
+       drop constraint if exists UK_6dotkott2kjsp8vw4d0m25fb7
+Hibernate: 
+    alter table if exists users 
+       add constraint UK_6dotkott2kjsp8vw4d0m25fb7 unique (email)
+Hibernate: 
+    alter table if exists issues 
+       add constraint FK4j2x3reshuu7qj5svh6eacnpt 
+       foreign key (project_id) 
+       references projects
+Hibernate: 
+    alter table if exists logs 
+       add constraint FKpbbrnfv1ducutu3mr2hcgk794 
+       foreign key (issue_id) 
+       references issues
+Hibernate: 
+    alter table if exists logs 
+       add constraint FK77g6aiecp6vw8o3at56y7dgun 
+       foreign key (project_id) 
+       references projects
+Hibernate: 
+    alter table if exists logs 
+       add constraint FK9f3ln4dsp5ygjqpi1eed2t3tw 
+       foreign key (sub_module_id) 
+       references sub_modules
+Hibernate: 
+    alter table if exists sub_modules 
+       add constraint FK1kvsw7poq33w3jkwdk1qx6iyb 
+       foreign key (project_id) 
+       references projects
+Hibernate: 
+    alter table if exists teams 
+       add constraint FK7so1u4r6rpxrqeyxekfwklt5l 
+       foreign key (project_id) 
+       references projects
+Hibernate: 
+    alter table if exists teams_submodules 
+       add constraint FKrtd8s52ux5x91j9yvct2l2kcp 
+       foreign key (sub_module_id) 
+       references sub_modules
+Hibernate: 
+    alter table if exists teams_submodules 
+       add constraint FK4ifidaec60934s3knmo8j3u0b 
+       foreign key (team_id) 
+       references teams
+Hibernate: 
+    alter table if exists users_teams 
+       add constraint FKh5yx5pc8x6mv9ohqfh18tw6es 
+       foreign key (team_id) 
+       references teams
+Hibernate: 
+    alter table if exists users_teams 
+       add constraint FK31k9hhkcp7fiugrk2lu7vq9jo 
+       foreign key (user_id) 
+       references users
+2026-04-05T09:58:34.018+05:30  INFO 3516 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05T09:58:34.943+05:30  INFO 3516 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-04-05T09:58:35.948+05:30  WARN 3516 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'issueController' defined in file [D:\react\sentinel-analytics\backend\target\classes\com\sentinel\controller\IssueController.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'geminiService': Injection of autowired dependencies failed
+2026-04-05T09:58:35.948+05:30  INFO 3516 --- [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05T09:58:35.953+05:30  INFO 3516 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-04-05T09:58:35.958+05:30  INFO 3516 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-04-05T09:58:35.960+05:30  INFO 3516 --- [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-04-05T09:58:35.979+05:30  INFO 3516 --- [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-04-05T09:58:36.003+05:30 ERROR 3516 --- [           main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'issueController' defined in file [D:\react\sentinel-analytics\backend\target\classes\com\sentinel\controller\IssueController.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'geminiService': Injection of autowired dependencies failed
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1355) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1192) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:962) ~[spring-context-6.1.5.jar:6.1.5]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624) ~[spring-context-6.1.5.jar:6.1.5]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.2.4.jar:3.2.4]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.2.4.jar:3.2.4]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.2.4.jar:3.2.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334) ~[spring-boot-3.2.4.jar:3.2.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-3.2.4.jar:3.2.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343) ~[spring-boot-3.2.4.jar:3.2.4]
+	at com.sentinel.SentinelApplication.main(SentinelApplication.java:11) ~[classes/:na]
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'geminiService': Injection of autowired dependencies failed
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:514) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1419) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:599) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782) ~[spring-beans-6.1.5.jar:6.1.5]
+	... 19 common frames omitted
+Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'gemini.api.key' in value "${gemini.api.key}"
+	at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:180) ~[spring-core-6.1.5.jar:6.1.5]
+	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:126) ~[spring-core-6.1.5.jar:6.1.5]
+	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:239) ~[spring-core-6.1.5.jar:6.1.5]
+	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:210) ~[spring-core-6.1.5.jar:6.1.5]
+	at org.springframework.context.support.PropertySourcesPlaceholderConfigurer.lambda$processProperties$0(PropertySourcesPlaceholderConfigurer.java:200) ~[spring-context-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveEmbeddedValue(AbstractBeanFactory.java:922) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1374) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:784) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:767) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:145) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:508) ~[spring-beans-6.1.5.jar:6.1.5]
+	... 31 common frames omitted
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  33.918 s
+[INFO] Finished at: 2026-04-05T09:58:36+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.2.4:run (default-cli) on project backend: Process terminated with exit code: 1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

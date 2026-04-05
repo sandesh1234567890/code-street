@@ -1,23 +1,28 @@
 import { useState, useEffect } from 'react';
-import { Search, ArrowRight, Table as TableIcon, RefreshCw } from 'lucide-react';
+import { Search, ArrowRight, RefreshCw, Filter, Activity, Globe, ShieldCheck } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 
 const LogViewer = () => {
     const [logs, setLogs] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const [search, setSearch] = useState('');
     const [level, setLevel] = useState('ALL');
     const [environment, setEnvironment] = useState('production');
-    const [subModuleId, setSubModuleId] = useState('');
+    const [subModuleId] = useState('');
+    const { token } = useAuth();
 
     const fetchLogs = async () => {
+        if (!token) return;
         setLoading(true);
         try {
-            const url = new URL('http://localhost:8080/api/logs');
+            const url = new URL('http://localhost:8081/api/logs');
             if (level !== 'ALL') url.searchParams.append('level', level);
             if (search) url.searchParams.append('search', search);
 
-            const response = await fetch(url.toString());
+            const response = await fetch(url.toString(), {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             if (!response.ok) throw new Error('Failed to fetch logs');
             const data = await response.json();
             
@@ -29,7 +34,7 @@ const LogViewer = () => {
             });
             setLogs(filtered);
         } catch (err: any) {
-            setError(err.message);
+            console.error(err.message);
         } finally {
             setLoading(false);
         }
@@ -37,136 +42,134 @@ const LogViewer = () => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            fetchLogs();
+            if (token) fetchLogs();
         }, 300); // Debounce search
         return () => clearTimeout(timer);
-    }, [search, level, environment, subModuleId]);
+    }, [search, level, environment, subModuleId, token]);
 
     return (
-        <div className="flex-1 p-8 overflow-y-auto">
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h2 className="text-3xl font-bold tracking-tight flex items-center gap-3">
-                        <TableIcon className="w-8 h-8 text-indigo-500" /> Log Explorer
-                    </h2>
-                    <p className="text-muted-foreground mt-1">Sift through millions of logs with blazingly fast full-text search.</p>
+        <div className="flex-1 flex overflow-hidden relative">
+            {/* Facet Sidebar */}
+            <aside className="w-72 glass border-r border-white/5 p-6 space-y-8 overflow-y-auto hidden lg:block shrink-0">
+                <div className="flex items-center gap-2 mb-4">
+                    <Filter className="w-4 h-4 text-indigo-400" />
+                    <h3 className="text-xs font-black uppercase tracking-widest text-slate-300">Facet Explorer</h3>
                 </div>
-                <button 
-                    onClick={fetchLogs}
-                    className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-                >
-                    <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Refresh
-                </button>
-            </div>
 
-            <div className="flex flex-wrap gap-4 mb-6">
-                <div className="flex-1 min-w-[300px] relative">
-                    <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
-                    <input 
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Filter logs by message, trace, or fingerprint..." 
-                        className="w-full bg-slate-900/50 border border-slate-800 rounded-md py-1.5 pl-10 pr-4 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
-                    />
+                <div className="space-y-6">
+                    {/* Environments */}
+                    <div>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-3">Environments</p>
+                        <div className="space-y-2">
+                            {['production', 'staging', 'development'].map(env => (
+                                <button 
+                                    key={env}
+                                    onClick={() => setEnvironment(env)}
+                                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-[11px] font-bold transition-all ${
+                                        environment === env ? 'bg-indigo-500/20 text-indigo-400 ring-1 ring-indigo-500/30' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
+                                    }`}
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <Globe className="w-3 h-3 opacity-50" />
+                                        <span className="capitalize">{env}</span>
+                                    </div>
+                                    <span className="text-[9px] opacity-40">1.2k</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Levels */}
+                    <div>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-3">Log Levels</p>
+                        <div className="space-y-2">
+                            {['ALL', 'INFO', 'WARN', 'ERROR', 'FATAL'].map(l => (
+                                <button 
+                                    key={l}
+                                    onClick={() => setLevel(l)}
+                                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-[11px] font-bold transition-all ${
+                                        level === l ? 'bg-indigo-500/20 text-indigo-400 ring-1 ring-indigo-500/30' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
+                                    }`}
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <ShieldCheck className="w-3 h-3 opacity-50" />
+                                        <span>{l}</span>
+                                    </div>
+                                    <div className={`w-1.5 h-1.5 rounded-full ${
+                                        l === 'ERROR' || l === 'FATAL' ? 'bg-rose-500' : l === 'WARN' ? 'bg-amber-500' : 'bg-blue-500'
+                                    }`} />
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                 </div>
-                <select 
-                    value={environment}
-                    onChange={(e) => setEnvironment(e.target.value)}
-                    className="px-3 py-1.5 bg-slate-900/50 rounded-md text-xs border border-slate-800 hover:bg-slate-800 focus:outline-none cursor-pointer text-slate-300"
-                >
-                    <option value="ALL">All Envs</option>
-                    <option value="production">Production</option>
-                    <option value="staging">Staging</option>
-                    <option value="development">Development</option>
-                </select>
-                <select 
-                    value={level}
-                    onChange={(e) => setLevel(e.target.value)}
-                    className="px-3 py-1.5 bg-slate-900/50 rounded-md text-xs border border-slate-800 hover:bg-slate-800 focus:outline-none cursor-pointer text-slate-300"
-                >
-                    <option value="ALL">All Levels</option>
-                    <option value="INFO">Info</option>
-                    <option value="WARN">Warning</option>
-                    <option value="ERROR">Error</option>
-                    <option value="FATAL">Fatal</option>
-                </select>
-            </div>
+            </aside>
 
-            {/* Logs Table */}
-            <div className="border border-border rounded-xl overflow-hidden bg-card/30 backdrop-blur-sm">
-                <table className="w-full text-left">
-                    <thead className="bg-secondary/50 border-b border-border">
-                        <tr>
-                            <th className="px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Level</th>
-                            <th className="px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Message</th>
-                            <th className="px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Project</th>
-                            <th className="px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Time</th>
-                            <th className="px-6 py-3"></th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border">
-                        {loading && (
-                            <tr>
-                                <td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">
-                                    <div className="flex flex-col items-center gap-2">
-                                        <RefreshCw className="w-8 h-8 animate-spin opacity-20" />
-                                        <span>Searching logs...</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        )}
-                        {!loading && logs.length === 0 && !error && (
-                            <tr>
-                                <td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">
-                                    No logs found matching your criteria.
-                                </td>
-                            </tr>
-                        )}
-                        {error && (
-                            <tr>
-                                <td colSpan={5} className="px-6 py-12 text-center text-rose-500 bg-rose-500/5">
-                                    Error loading logs: {error}
-                                </td>
-                            </tr>
-                        )}
-                        {logs.map((log) => (
-                            <tr key={log.id} className="hover:bg-indigo-500/5 border-b border-white/5 transition-colors group cursor-pointer text-[11px]">
-                                <td className="px-6 py-2.5 whitespace-nowrap">
-                                    <span className={`px-1.5 py-0.5 rounded-sm font-black text-[9px] uppercase tracking-tighter ${
-                                        log.level === 'ERROR' ? 'bg-rose-500/20 text-rose-500' :
-                                        log.level === 'FATAL' ? 'bg-rose-600 text-white' :
-                                        log.level === 'WARN' ? 'bg-amber-500/20 text-amber-500' :
-                                        'bg-blue-500/20 text-blue-400'
-                                    }`}>
-                                        {log.level}
+            {/* Main Log Stream */}
+            <main className="flex-1 flex flex-col min-w-0 bg-[#020617]">
+                <div className="p-6 border-b border-white/5 flex items-center justify-between bg-slate-900/20 backdrop-blur-md sticky top-0 z-20">
+                    <div className="flex-1 max-w-xl relative group">
+                        <Search className="absolute left-4 top-2.5 w-3.5 h-3.5 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
+                        <input 
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            placeholder="⌘ / Filter logs by message, trace, or fingerprint..." 
+                            className="w-full bg-slate-950/50 border border-white/5 rounded-xl py-2 pl-11 pr-4 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500/50 transition-all font-mono placeholder:text-slate-700"
+                        />
+                    </div>
+                    <div className="flex items-center gap-4 ml-4">
+                        <button 
+                            onClick={fetchLogs}
+                            className="p-2 text-slate-500 hover:text-indigo-400 transition-colors"
+                        >
+                            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                        </button>
+                        <div className="h-4 w-[1px] bg-white/10" />
+                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            <Activity className="w-3.5 h-3.5 pulse-indicator" />
+                            <span className="text-[10px] font-black uppercase tracking-widest">Live</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-4 space-y-1">
+                    <AnimatePresence initial={false}>
+                        {logs.map((log, idx) => (
+                            <motion.div 
+                                key={log.id}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: Math.min(idx * 0.02, 0.4) }}
+                                className="group flex items-start gap-4 p-2 rounded-lg hover:bg-indigo-500/5 border border-transparent hover:border-white/5 transition-all cursor-pointer text-[11px] font-mono"
+                            >
+                                <div className="w-24 shrink-0 text-slate-600 font-bold tabular-nums">
+                                    {new Date(log.timestamp).toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}.
+                                    <span className="text-[9px] opacity-40">{new Date(log.timestamp).getMilliseconds()}ms</span>
+                                </div>
+                                <div className={`px-1.5 py-0.5 rounded-sm font-black text-[9px] uppercase tracking-tighter shrink-0 ${
+                                    log.level === 'ERROR' ? 'bg-rose-500/20 text-rose-500' :
+                                    log.level === 'FATAL' ? 'bg-rose-600 text-white' :
+                                    log.level === 'WARN' ? 'bg-amber-500/20 text-amber-500' :
+                                    'bg-blue-500/20 text-blue-400'
+                                }`}>
+                                    {log.level}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <span className="text-slate-200 line-clamp-1 group-hover:line-clamp-none transition-all duration-300">
+                                        {log.message}
                                     </span>
-                                </td>
-                                <td className="px-6 py-2.5">
-                                    <div className="flex flex-col">
-                                        <p className="font-medium text-slate-200 line-clamp-1 font-mono tracking-tight">{log.message}</p>
-                                        <div className="flex gap-3 text-[9px] text-slate-500 mt-0.5 uppercase tracking-widest font-semibold">
-                                            <span>Env: {log.environment}</span>
-                                            {log.subModule && <span>Mod: {log.subModule.name}</span>}
-                                        </div>
+                                    <div className="flex gap-4 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">{log.environment}</span>
+                                        {log.subModule && <span className="text-[9px] text-indigo-400/60 font-bold uppercase tracking-widest">mod:{log.subModule.name}</span>}
+                                        <span className="text-[9px] text-slate-600 font-bold uppercase tracking-widest">id:{log.id.substring(0,8)}</span>
                                     </div>
-                                </td>
-                                <td className="px-6 py-2.5">
-                                    <span className="text-slate-400 font-mono bg-indigo-500/10 px-1.5 py-0.5 rounded border border-indigo-500/20">{log.project?.name || 'n/a'}</span>
-                                </td>
-                                <td className="px-6 py-2.5 whitespace-nowrap tabular-nums">
-                                    <span className="text-slate-400">
-                                        {new Date(log.timestamp).toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}.
-                                        <span className="text-[9px] opacity-50">{new Date(log.timestamp).getMilliseconds()}ms</span>
-                                    </span>
-                                </td>
-                                <td className="px-6 py-2.5 text-right">
-                                    <ArrowRight className="w-3.5 h-3.5 text-slate-700 group-hover:text-indigo-400 transition-colors inline" />
-                                </td>
-                            </tr>
+                                </div>
+                                <ArrowRight className="w-3.5 h-3.5 text-slate-800 group-hover:text-indigo-400 transition-colors shrink-0" />
+                            </motion.div>
                         ))}
-                    </tbody>
-                </table>
-            </div>
+                    </AnimatePresence>
+                </div>
+            </main>
         </div>
     );
 };
