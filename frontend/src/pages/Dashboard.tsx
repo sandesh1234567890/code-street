@@ -136,7 +136,7 @@ const Dashboard = () => {
                 <div className="glass p-8 rounded-3xl border-glow">
                     <div className="flex items-center justify-between mb-8">
                         <div>
-                            <h3 className="text-lg font-black text-white tracking-tight">吞吐量 - Ingestion Throughput</h3>
+                            <h3 className="text-lg font-black text-white tracking-tight">Ingestion Throughput</h3>
                             <p className="text-xs text-slate-500 font-bold tracking-widest uppercase">Logs per minute / real-time</p>
                         </div>
                         <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20">
@@ -169,7 +169,7 @@ const Dashboard = () => {
                 <div className="glass p-8 rounded-3xl border-glow">
                     <div className="flex items-center justify-between mb-8">
                         <div>
-                            <h3 className="text-lg font-black text-white tracking-tight">异常监控 - Anomaly Monitoring</h3>
+                            <h3 className="text-lg font-black text-white tracking-tight">Anomaly Monitoring</h3>
                             <p className="text-xs text-slate-500 font-bold tracking-widest uppercase">Error spikes & distribution</p>
                         </div>
                         <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20">
